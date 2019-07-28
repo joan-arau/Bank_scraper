@@ -3,6 +3,8 @@ from   selenium import webdriver
 from   selenium.webdriver.common.by import By
 import time
 import datetime
+import twilio_msgr as message
+
 now = datetime.date.today().strftime('%Y-%m-%d')
 
 from selenium.webdriver.chrome.options import Options
@@ -12,6 +14,7 @@ import glob
 import shutil
 import pandas as pd
 
+downloads = config.downloads
 chromedriver = config.chromedriver
 path = os.path.join(config.db_path,'schwab')
 LOGIN = config.schwab_cred['login']
@@ -48,6 +51,9 @@ def get_balance():
         element = browser.find_element(By.XPATH,'/html/body/div[3]/div[1]/span[2]/a').click()
     except:
         browser.quit()
+        message.send('Schwab Login Failed')
+        exit()
+    time.sleep(3)
     element = browser.find_element(By.XPATH,'//*[@id="accounts_summary"]/div[3]/div[1]/div/ul/li/div/div/div[2]/div[1]')
     value = element.text
 
@@ -64,21 +70,21 @@ def get_balance():
     mkt_vl = value - cash
     print('total: ',value,'market_vl: ',mkt_vl,'cash: ',cash)
 
-    # element = browser.find_element(By.XPATH, '// *[ @ id = "btn-menu"]').click()
-    # time.sleep(0.5)
-    # element = browser.find_element(By.XPATH, '// *[ @ id = "lnkFullSite"]').click()
-    # time.sleep(1)
-    # browser.get("https://client.schwab.com/secure/cc/accounts/positions")
-    # time.sleep(1)
-    #
-    # window_before = browser.window_handles[0]
-    # element = browser.find_element(By.XPATH, '//*[@id="exportLink"]').click()
-    # window_after = browser.window_handles[1]
-    # browser.switch_to.window(window_after)
-    # time.sleep(1)
-    # element = browser.find_element(By.XPATH, '// *[ @ id = "ctl00_WebPartManager1_wpExportDisclaimer_ExportDisclaimer_btnOk"]').click()
-    # time.sleep(5)
-    #
+    element = browser.find_element(By.XPATH, '// *[ @ id = "btn-menu"]').click()
+    time.sleep(0.5)
+    element = browser.find_element(By.XPATH, '// *[ @ id = "lnkFullSite"]').click()
+    time.sleep(1)
+    browser.get("https://client.schwab.com/secure/cc/accounts/positions")
+    time.sleep(1)
+
+    window_before = browser.window_handles[0]
+    element = browser.find_element(By.XPATH, '//*[@id="exportLink"]').click()
+    window_after = browser.window_handles[1]
+    browser.switch_to.window(window_after)
+    time.sleep(2)
+    element = browser.find_element(By.XPATH, '// *[ @ id = "ctl00_WebPartManager1_wpExportDisclaimer_ExportDisclaimer_btnOk"]').click()
+    time.sleep(5)
+
 
     print("done")
     #browser.close()
@@ -106,7 +112,7 @@ def line_prepender(filename,fields):
     df=df.reset_index(drop=True)
     df['entry']=0
     print(df.tail(10))
-    #df.to_csv(os.path.join(config.db_path, 'mysql_db_csv/portfolio_value/','54816757.csv'), index=False)
+    df.to_csv(os.path.join(config.db_path, 'mysql_db_csv/portfolio_value/','54816757.csv'), index=False)
 
 
 
@@ -119,9 +125,10 @@ def file_mover(download_folder,destination):
 
 
 if __name__=="__main__":
+    #test
     # line_prepender(PATH,fields)
     line_prepender(PATH,fields2)
-    file_mover('/Users/joanarau-schweizer/Downloads',path)
+    file_mover(downloads,path)
 
 
 
