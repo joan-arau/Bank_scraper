@@ -40,8 +40,6 @@ def get_balance():
 
 
 
-    print(browser.current_url)
-
     time.sleep(5)
 
     element = browser.find_element(By.XPATH,'/html/body/div[3]/div[1]/span[2]/a').click()

@@ -18,8 +18,8 @@ pd.set_option('display.max_columns', 500)
 
 
 def get_different_rows(source_df, new_df):
-    print(new_df.tail())
-    print(source_df.tail())
+    # print(new_df.tail())
+    # print(source_df.tail())
     """Returns just the rows from the new dataframe that differ from the source dataframe"""
     if len(new_df) > len(source_df):
         longer_df = new_df
@@ -116,5 +116,5 @@ def clean_local_csv(accountnumber):
     df.to_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
 
 
-append_portfolio_values_sql('54816757')
-# update_local_portfoliovalue_csv_fromsql('54816757')
+#append_portfolio_values_sql('54816757')
+update_local_portfoliovalue_csv_fromsql('54816757')
