@@ -17,6 +17,7 @@ import os
 pd.set_option('display.max_columns', 500)
 
 
+
 def get_different_rows(source_df, new_df):
     # print(new_df.tail())
     # print(source_df.tail())
@@ -43,9 +44,10 @@ def get_different_rows(source_df, new_df):
 
 
 def append_portfolio_values_sql(accountnumber):
-    df = pd.DataFrame.from_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
+    df = pd.read_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
     df.rename(columns={'Date': 'Date'})
     df['account_number'] = accountnumber
+
 
     # con = mysql.connector.connect(user=user, password=password, host=host, port='3307', db=db_name)
     engine = create_engine('mysql+pymysql://' + user + ':' + password + '@' + host + ':' + '3307' + '/' + db_name,
@@ -55,18 +57,23 @@ def append_portfolio_values_sql(accountnumber):
     df_old = pd.read_sql(sql='portfolio_value', con=con, index_col='entry', parse_dates='Date')
     df_old = df_old.reset_index(drop=True)
     df_old = df_old.loc[df_old['account_number'] == int(accountnumber)]
+
     df = df.reset_index(drop=False)
+
+
 
     new_rows = get_different_rows(df_old, df)
     print(new_rows)
     # new_rows = df
     num_rows = len(new_rows)
+
     dub = 0
     for i in range(num_rows):
 
         try:
             # Try inserting the row
             row = pd.DataFrame(new_rows[i]).T
+            row=row.drop(['index'],axis=1)
             print(row)
             row['Date'] = pd.to_datetime(row['Date'])
             row['cash'] = float(row['cash'])
@@ -74,7 +81,8 @@ def append_portfolio_values_sql(accountnumber):
             row['total_value'] = float(row['total_value'])
             row['account_number'] = int(row['account_number'])
             row['broker_id'] = int(row['broker_id'])
-            row['entry'] = int(0)
+            row['entry'] = 0
+
 
             row.to_sql(con=con, name='portfolio_value', index=False, if_exists='append', schema=db_name)
 
@@ -116,5 +124,5 @@ def clean_local_csv(accountnumber):
     df.to_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
 
 
-#append_portfolio_values_sql('54816757')
-update_local_portfoliovalue_csv_fromsql('54816757')
+append_portfolio_values_sql('54816757')
+#update_local_portfoliovalue_csv_fromsql('54816757')

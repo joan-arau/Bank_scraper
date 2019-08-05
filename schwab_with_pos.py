@@ -67,7 +67,7 @@ def get_balance():
     cash = float(cash.replace("$", "").replace(",",""))
 
 
-    mkt_vl = value - cash
+    mkt_vl = float(value - cash)
     print('total: ',value,'market_vl: ',mkt_vl,'cash: ',cash)
 
     element = browser.find_element(By.XPATH, '// *[ @ id = "btn-menu"]').click()
