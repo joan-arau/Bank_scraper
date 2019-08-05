@@ -73,7 +73,7 @@ def append_portfolio_values_sql(accountnumber):
         try:
             # Try inserting the row
             row = pd.DataFrame(new_rows[i]).T
-            row=row.drop(['index'],axis=1)
+            row=row.drop(['index','level_0'],axis=1)
             print(row)
             row['Date'] = pd.to_datetime(row['Date'])
             row['cash'] = float(row['cash'])
