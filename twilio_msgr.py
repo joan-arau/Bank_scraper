@@ -1,5 +1,4 @@
 import config
-db = config.db_folder
 from twilio.rest import Client
 
 

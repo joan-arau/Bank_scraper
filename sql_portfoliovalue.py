@@ -58,7 +58,7 @@ def append_portfolio_values_sql(accountnumber):
     df_old = df_old.reset_index(drop=True)
     df_old = df_old.loc[df_old['account_number'] == int(accountnumber)]
 
-    df = df.reset_index(drop=False)
+    df = df.reset_index(drop=True)
 
 
 
@@ -124,5 +124,5 @@ def clean_local_csv(accountnumber):
     df.to_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
 
 
-append_portfolio_values_sql('54816757')
+# append_portfolio_values_sql('54816757')
 #update_local_portfoliovalue_csv_fromsql('54816757')

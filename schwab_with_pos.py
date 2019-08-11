@@ -20,6 +20,46 @@ path = os.path.join(config.db_path,'schwab')
 LOGIN = config.schwab_cred['login']
 PASSWORD = config.schwab_cred['password']
 pd.set_option('display.max_columns', 500)
+
+
+def test_login():
+    options = Options()
+
+    browser = webdriver.Chrome(executable_path=chromedriver,options=options)
+
+
+    ### Login
+    LOGIN_URL = 'https://www.schwab.com/public/schwab/nn/login/mobile-login.html&lang=en'
+    browser.get(LOGIN_URL)
+    browser.switch_to.frame('mobile-login')
+    username = browser.find_element_by_id('LoginId')
+    password = browser.find_element_by_id('Password')
+    username.send_keys(LOGIN)
+    password.send_keys(PASSWORD)
+    browser.find_element_by_id('RememberLoginId').click()
+    browser.find_element_by_id('Submit').click()
+
+    # Wait until login is done...
+    while  browser.current_url == LOGIN_URL:
+      print('waiting...')
+      time.sleep(0.1)
+
+
+
+    time.sleep(5)
+
+    # check if login was successful, else quit
+    try:
+        element = browser.find_element(By.XPATH,'/html/body/div[3]/div[1]/span[2]/a').click()
+    except:
+        print('Login Failed')
+
+    while True:
+      print('waiting...')
+      time.sleep(5)
+
+
+
 def get_balance():
     options = Options()
 
@@ -51,7 +91,7 @@ def get_balance():
         element = browser.find_element(By.XPATH,'/html/body/div[3]/div[1]/span[2]/a').click()
     except:
         browser.quit()
-        message.send('Schwab Login Failed')
+        # message.send('Schwab Login Failed')
         exit()
     time.sleep(3)
     element = browser.find_element(By.XPATH,'//*[@id="accounts_summary"]/div[3]/div[1]/div/ul/li/div/div/div[2]/div[1]')
@@ -90,12 +130,14 @@ def get_balance():
     #browser.close()
     browser.quit()
     return value, mkt_vl,cash
-value = get_balance()
-print(value)
-fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
 
-# fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
-print(fields2)
+
+# value = get_balance()
+# print(value)
+# fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
+#
+# # fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
+# print(fields2)
 PATH=os.path.join(path,'portfolio_value.csv')
 
 def line_prepender(filename,fields):
@@ -126,9 +168,11 @@ def file_mover(download_folder,destination):
 
 if __name__=="__main__":
     #test
-    # line_prepender(PATH,fields)
-    line_prepender(PATH,fields2)
-    file_mover(downloads,path)
+
+    # line_prepender(PATH,fields2)
+    # file_mover(downloads,path)
+
+    test_login()
 
 
 
