@@ -73,7 +73,9 @@ def append_portfolio_values_sql(accountnumber):
         try:
             # Try inserting the row
             row = pd.DataFrame(new_rows[i]).T
-            row=row.drop(['index','level_0'],axis=1)
+
+            #row=row.drop(['index','level_0'],axis=1)
+
             print(row)
             row['Date'] = pd.to_datetime(row['Date'])
             row['cash'] = float(row['cash'])
@@ -124,5 +126,5 @@ def clean_local_csv(accountnumber):
     df.to_csv(os.path.join(db_folder, 'mysql_db_csv/portfolio_value/', str(accountnumber + '.csv')))
 
 
-# append_portfolio_values_sql('54816757')
+append_portfolio_values_sql('54816757')
 #update_local_portfoliovalue_csv_fromsql('54816757')

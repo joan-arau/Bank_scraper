@@ -111,43 +111,43 @@ def get_balance():
     print('total: ',value,'market_vl: ',mkt_vl,'cash: ',cash)
 
     element = browser.find_element(By.XPATH, '// *[ @ id = "btn-menu"]').click()
-    time.sleep(0.5)
+    time.sleep(3)
     element = browser.find_element(By.XPATH, '// *[ @ id = "lnkFullSite"]').click()
-    time.sleep(1)
+    time.sleep(3)
     browser.get("https://client.schwab.com/secure/cc/accounts/positions")
-    time.sleep(1)
+    time.sleep(3)
 
     window_before = browser.window_handles[0]
     element = browser.find_element(By.XPATH, '//*[@id="exportLink"]').click()
     window_after = browser.window_handles[1]
     browser.switch_to.window(window_after)
-    time.sleep(2)
+    time.sleep(3)
     element = browser.find_element(By.XPATH, '// *[ @ id = "ctl00_WebPartManager1_wpExportDisclaimer_ExportDisclaimer_btnOk"]').click()
     time.sleep(5)
 
 
     print("done")
-    #browser.close()
+ #   browser.close()
     browser.quit()
     return value, mkt_vl,cash
 
 
-# value = get_balance()
-# print(value)
-# fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
-#
-# # fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
-# print(fields2)
+value = get_balance()
+print(value)
+fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
+
+# fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
+print(fields2)
 PATH=os.path.join(path,'portfolio_value.csv')
 
 def line_prepender(filename,fields):
 
 
-    df = pd.DataFrame.from_csv(os.path.join(config.db_path, 'mysql_db_csv/portfolio_value/','54816757.csv'))
+    df = pd.read_csv(os.path.join(config.db_path, 'mysql_db_csv/portfolio_value/','54816757.csv'))
     print(df.tail())
     new_row=pd.DataFrame([[fields[0],fields[1],fields[2],fields[3],fields[4],fields[5],fields[6]]],columns=['Date','total_value','broker_id','account_number','portfolio_value','cash','currency'])
     new_row=new_row.reset_index(drop=True)
-    df=df.reset_index()
+    df=df.reset_index(drop=True)
     print(new_row)
     df=df.append(new_row.reset_index(drop=True))
 
@@ -169,10 +169,10 @@ def file_mover(download_folder,destination):
 if __name__=="__main__":
     #test
 
-    # line_prepender(PATH,fields2)
-    # file_mover(downloads,path)
+    line_prepender(PATH,fields2)
+    file_mover(downloads,path)
 
-    test_login()
+    #test_login()
 
 
 

@@ -19,7 +19,7 @@ def get_balance():
     # options.add_argument("--disable-gpu")
     # options.add_argument("--window-size=600,800")
 
-    browser = webdriver.Chrome(executable_path=r'/Users/joanarau-schweizer/PycharmProjects/stockbot/chromedriver 10.15.44 pm',options=options)
+    browser = webdriver.Chrome(config.chromedriver,options=options)
 
 
     ### Login
@@ -35,18 +35,25 @@ def get_balance():
     browser.find_element_by_id('login').click()
 
     # Wait until login is done... (is AJAX login)
-    while  browser.current_url == LOGIN_URL:
-      print('waiting...')
-      time.sleep(0.1)
+    # while  browser.current_url == LOGIN_URL:
+    #   print('waiting...')
+    #   time.sleep(0.1)
 
 
 
-    time.sleep(5)
+    time.sleep(10)
 
     dict={}
+    load =False
+    while load == False:
+        try:
+            element = browser.find_element(By.XPATH,'//*[@id="Kontouebersicht.Inhaber1"]/table/tbody/tr[2]/td[6]/div/span/span[1]')
+            load = True
+        except:
+            print('Loading page...')
+            pass
 
 
-    element = browser.find_element(By.XPATH,'//*[@id="Kontouebersicht.Inhaber1"]/table/tbody/tr[2]/td[6]/div/span/span[1]')
 
     dict['portfolio_firma'] = element.text
 
@@ -91,7 +98,6 @@ line_prepender(PATH,fields)
 
 fields=[now,[value['personal_a'][0],value['personal_a'][1],value['personal_b'][0],value['personal_b'][1]]]
 PATH=os.path.join(path,'portfolio_personal.csv')
-print(PATH)
 line_prepender(PATH,fields)
 
 
