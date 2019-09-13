@@ -91,7 +91,7 @@ def get_balance():
         element = browser.find_element(By.XPATH,'/html/body/div[3]/div[1]/span[2]/a').click()
     except:
         browser.quit()
-        # message.send('Schwab Login Failed')
+        message.send('Schwab Login Failed')
         exit()
     time.sleep(3)
     element = browser.find_element(By.XPATH,'//*[@id="accounts_summary"]/div[3]/div[1]/div/ul/li/div/div/div[2]/div[1]')
@@ -131,16 +131,16 @@ def get_balance():
     browser.quit()
     return value, mkt_vl,cash
 
+def get_fields():
+    value = get_balance()
+    print(value)
+    fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
 
-value = get_balance()
-print(value)
-fields2=[now,value[0],1,int('54816757'),value[1],value[2],'USD',]
-
-# fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
-print(fields2)
+    # fields=[now,float('10000.05'),int('1'),int('54816757'),float('10000.05'),float('5000.05'),'USD']
+    return fields2
 PATH=os.path.join(path,'portfolio_value.csv')
 
-def line_prepender(filename,fields):
+def line_prepender(fields):
 
 
     df = pd.read_csv(os.path.join(config.db_path, 'mysql_db_csv/portfolio_value/','54816757.csv'))
@@ -168,11 +168,12 @@ def file_mover(download_folder,destination):
 
 if __name__=="__main__":
     #test
+    test_login()
 
-    line_prepender(PATH,fields2)
-    file_mover(downloads,path)
 
-    #test_login()
+    # line_prepender(get_fields())
+    # file_mover(downloads,path)
+
 
 
 
