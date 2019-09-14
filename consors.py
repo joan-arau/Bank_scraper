@@ -57,6 +57,7 @@ def get_balance():
             load = True
         except:
             print('Loading page...')
+            time.sleep(2)
             pass
         x+=1
         if x > 100:

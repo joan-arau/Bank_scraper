@@ -168,11 +168,11 @@ def file_mover(download_folder,destination):
 
 if __name__=="__main__":
     #test
-    test_login()
+    # test_login()
 
-
-    # line_prepender(get_fields())
-    # file_mover(downloads,path)
+    fields= get_fields()
+    line_prepender(fields)
+    file_mover(downloads,path)
 
 
 
